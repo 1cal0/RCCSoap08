@@ -20,7 +20,7 @@ require_once("your/path/here/RCCServiceSoap08.php");
 
 $RCCServiceSoap = new RCCServiceSoap08("127.0.0.1", 64989, "roblox.com", true);
 // PARAMETERS:
-// "127.0.0.1")"  			= rcc url
+// "127.0.0.1")"  			= rcc ip
 // 64989                  	= rcc port
 // "roblox.com"				= patched site domain
 // true                     = fix renders
@@ -28,7 +28,7 @@ $RCCServiceSoap = new RCCServiceSoap08("127.0.0.1", 64989, "roblox.com", true);
 $result = $RCCServiceSoap->execScript('print("Hello World")', "job1", 5);
 echo $result;
 // PARAMETERS:
-// "print(\"Hello World\")"  = Lua script to execute
+// "print('Hello World')     = Lua script to execute
 // "job1"                    = job id (must be unique per request)
 // 1                         = job expiration time (seconds)
 
@@ -36,8 +36,6 @@ echo $result;
 // QUICK TEST FUNCTION
 echo $RCCServiceSoap->helloWorld();
 */
-
-// make sure to check updates regularly!
 
 class RCCServiceSoap08 {
     public $ip;
