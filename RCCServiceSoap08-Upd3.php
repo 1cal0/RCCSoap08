@@ -6,11 +6,11 @@
 
 /*
     -------------------- Update 3 - 05/06/2026 ---------------------
-    # fixed possible curl will hang forever if RCC is down
-    # fix where the URL passed to requestUrl() had missing "/" path. RCC expects "http://ip:port/" not "http://ip:port:"
-    # fix if $script contains <, >, or & it will break the XML
+	# minor fixes
+    # proper sanitization
+    # improved guide on how to use rccsoap08
+    # fix if $script contains <, >, or & it might break the XML
 	# better readme file
-	# improved guide on how to use rccsoap08
     -------------------------------------------------------------
 */
 
@@ -46,6 +46,19 @@ class RCCServiceSoap08 {
     public $renderFix;
 
     function __construct($ip = "127.0.0.1", $port = 64989, $url = "roblox.com", $renderFix = true) {
+		
+		if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+	    	throw new InvalidArgumentException("invalid IP");
+	    }
+
+	    if (!is_int($port) || $port < 1) {
+	        throw new InvalidArgumentException("invalid RCC port");
+	    }
+		
+		if (!filter_var('http://' . $url, FILTER_VALIDATE_URL)) {
+        	throw new InvalidArgumentException("invalid URL");
+    	}
+		
         $this->ip = $ip;
         $this->port = $port;
         $this->url = $url;
@@ -88,26 +101,26 @@ class RCCServiceSoap08 {
 
     function execScript($script = 'print("Hello World!")', $jobId = "helloworld", $jobExpiration = 0.1) {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://'.$this->url.'/RCCServiceSoap" xmlns:ns1="http://'.$this->url.'/" xmlns:ns3="http://'.$this->url.'/RCCServiceSoap12">
+        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://'.$this->url.'/" xmlns:ns2="http://'.$this->url.'/RCCServiceSoap" xmlns:ns3="http://'.$this->url.'/RCCServiceSoap12">
             <SOAP-ENV:Body>
                 <ns1:OpenJob>
                     <ns1:job>
-                        <ns1:id>'.$jobId.'</ns1:id>
-                        <ns1:expirationInSeconds>'.$jobExpiration.'</ns1:expirationInSeconds>
+                        <ns1:id>' . htmlspecialchars($jobId, ENT_XML1, 'UTF-8', false) . '</ns1:id>
+                        <ns1:expirationInSeconds>' . htmlspecialchars((string)$jobExpiration, ENT_XML1, 'UTF-8', false) . '</ns1:expirationInSeconds>
                         <ns1:category>1</ns1:category>
                         <ns1:cores>321</ns1:cores>
                     </ns1:job>
                     <ns1:script>
                         <ns1:name>Script</ns1:name>
                         <ns1:script>
-                            ' . htmlspecialchars($script, ENT_XML1) . '
+                            ' . htmlspecialchars($script, ENT_XML1, 'UTF-8', false) . '
                         </ns1:script>
                     </ns1:script>
                 </ns1:OpenJob>
             </SOAP-ENV:Body>
         </SOAP-ENV:Envelope>';
 
-        return $this->requestUrl("http://" . $this->ip . ":" . $this->port . "/", $xml);
+        return $this->requestUrl("http://" . $this->ip . ":" . $this->port, $xml);
     }
 
     function helloWorld() {
