@@ -2,7 +2,7 @@
 
 // this defines the rccservicesoap class yeah so uhm use it if you want to :)
 // not needing any other file, only the class then you are ready to go
-// made by nolanwhy
+// originally made by nolanwhy
 
 /*
     -------------------- Update 3 - 05/06/2026 ---------------------
@@ -37,74 +37,99 @@ echo $result;
 echo $RCCServiceSoap->helloWorld();
 */
 
-class RCCServiceSoap08 {
+class RCCServiceSoap08
+{
     public $ip;
     public $port;
     public $url;
     public $renderFix;
 
-    function __construct($ip = "127.0.0.1", $port = 64989, $url = "roblox.com", $renderFix = true) {
-		
-		if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-	    	throw new InvalidArgumentException("invalid IP");
-	    }
+    public function __construct($ip = "127.0.0.1", $port = 64989, $url = "roblox.com", $renderFix = true)
+    {
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            throw new InvalidArgumentException("invalid IP");
+        }
 
-	    if (!is_int($port) || $port < 1) {
-	        throw new InvalidArgumentException("invalid RCC port");
-	    }
-		
-		if (!filter_var('http://' . $url, FILTER_VALIDATE_URL)) {
-        	throw new InvalidArgumentException("invalid URL");
-    	}
-		
+        if (!is_int($port) || $port < 1) {
+            throw new InvalidArgumentException("invalid RCC port");
+        }
+
+        if (!filter_var('http://' . $url, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException("invalid URL");
+        }
+
         $this->ip = $ip;
         $this->port = $port;
         $this->url = $url;
         $this->renderFix = $renderFix;
     }
 
-    function requestUrl($url, $xml) {
-        $ch = curl_init($url);
+    public function requestUrl($url, $xml)
+    {
+        $curlHandle = curl_init($url);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [ "Content-Type: text/xml" ]);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($curlHandle, CURLOPT_HTTPHEADER, ["Content-Type: text/xml"]);
+        curl_setopt($curlHandle, CURLOPT_POST, true);
+        curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $xml);
+        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
+
+        $response = curl_exec($curlHandle);
 
         $result = str_replace(
-            [ "<ns1:value>", "</ns1:value>", "</ns1:OpenJobResult>", "<ns1:OpenJobResult>", "<ns1:type>", "</ns1:type>", "<ns1:table>", "</ns1:table>", "</ns1:OpenJobResult>", "</ns1:OpenJobResponse>", "</SOAP-ENV:Body>", "</SOAP-ENV:Envelope>" ],
+            [
+                "<ns1:value>",
+                "</ns1:value>",
+                "</ns1:OpenJobResult>",
+                "<ns1:OpenJobResult>",
+                "<ns1:type>",
+                "</ns1:type>",
+                "<ns1:table>",
+                "</ns1:table>",
+                "</ns1:OpenJobResult>",
+                "</ns1:OpenJobResponse>",
+                "</SOAP-ENV:Body>",
+                "</SOAP-ENV:Envelope>"
+            ],
             "",
             strstr(
                 str_replace(
-                    [ "LUA_TSTRING", "LUA_TNUMBER", "LUA_TBOOLEAN", "LUA_TTABLE" ],
+                    [
+                        "LUA_TSTRING",
+                        "LUA_TNUMBER",
+                        "LUA_TBOOLEAN",
+                        "LUA_TTABLE"
+                    ],
                     "",
-                    curl_exec($ch)
+                    $response
                 ),
                 "<ns1:value>"
             )
         );
 
-        // FIX FOR SOME RENDERS!
-        if($this->renderFix) {
-            $position = strpos($result, "<ns1:LuaValue>");
-            if($position !== false)
-                $result = substr($result, 0, $position);
+        // trim trailing render data returned by some RCC builds.
+        if ($this->renderFix) {
+            $luaValuePosition = strpos($result, "<ns1:LuaValue>");
+
+            if ($luaValuePosition !== false) {
+                $result = substr($result, 0, $luaValuePosition);
+            }
         }
 
         return $result;
     }
 
-    function execScript($script = 'print("Hello World!")', $jobId = "helloworld", $jobExpiration = 0.1) {
+    public function execScript($script = 'print("Hello World!")', $jobId = "helloworld", $jobExpiration = 0.1)
+    {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://'.$this->url.'/" xmlns:ns2="http://'.$this->url.'/RCCServiceSoap" xmlns:ns3="http://'.$this->url.'/RCCServiceSoap12">
+        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://' . $this->url . '/" xmlns:ns2="http://' . $this->url . '/RCCServiceSoap" xmlns:ns3="http://' . $this->url . '/RCCServiceSoap12">
             <SOAP-ENV:Body>
                 <ns1:OpenJob>
                     <ns1:job>
                         <ns1:id>' . htmlspecialchars($jobId, ENT_XML1, 'UTF-8', false) . '</ns1:id>
-                        <ns1:expirationInSeconds>' . htmlspecialchars((string)$jobExpiration, ENT_XML1, 'UTF-8', false) . '</ns1:expirationInSeconds>
+                        <ns1:expirationInSeconds>' . htmlspecialchars((string) $jobExpiration, ENT_XML1, 'UTF-8', false) . '</ns1:expirationInSeconds>
                         <ns1:category>1</ns1:category>
                         <ns1:cores>321</ns1:cores>
                     </ns1:job>
@@ -118,10 +143,18 @@ class RCCServiceSoap08 {
             </SOAP-ENV:Body>
         </SOAP-ENV:Envelope>';
 
-        return $this->requestUrl("http://" . $this->ip . ":" . $this->port, $xml);
+        return $this->requestUrl(
+            "http://" . $this->ip . ":" . $this->port,
+            $xml
+        );
     }
 
-    function helloWorld() {
-        return $this->execScript('print("Hello World!")', "helloworld", 0.1);
+    public function helloWorld()
+    {
+        return $this->execScript(
+            'print("Hello World!")',
+            "helloworld",
+            0.1
+        );
     }
 }
