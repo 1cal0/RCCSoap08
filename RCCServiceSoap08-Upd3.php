@@ -46,9 +46,9 @@ class RCCServiceSoap08
 
     public function __construct($ip = "127.0.0.1", $port = 64989, $url = "roblox.com", $renderFix = true)
     {
-        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            throw new InvalidArgumentException("invalid IP");
-        }
+		if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+			throw new InvalidArgumentException("invalid IP");
+		}
 
         if (!is_int($port) || $port < 1) {
             throw new InvalidArgumentException("invalid RCC port");
