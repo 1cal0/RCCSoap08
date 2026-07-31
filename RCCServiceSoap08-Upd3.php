@@ -69,8 +69,10 @@ class RCCServiceSoap08
         $curlHandle = curl_init($url);
 
         curl_setopt($curlHandle, CURLOPT_HTTPHEADER, ["Content-Type: text/xml"]);
+		// rccservice accepts only post requests
         curl_setopt($curlHandle, CURLOPT_POST, true);
         curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $xml);
+		
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
