@@ -1,7 +1,7 @@
 <?php
 
 /*
-    - 05/06/2026
+    - 05/08/2026
 	# minor fixes
     # proper sanitization
     # improved guide on how to use rccsoap08
