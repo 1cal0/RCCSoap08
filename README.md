@@ -1,8 +1,8 @@
-# RCCSoap08 (RCCServiceSoap08-improved)
+# RCCSoap08 (improved version of RCCServiceSoap08)
 
 This project uses **RCCService 0.3.783.0** (build from **May 14, 2008**).
 
-Originally made by nolanwhy.
+This project was originally made by nolanwhy.
 
 ## Installation
 
