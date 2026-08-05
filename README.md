@@ -21,6 +21,8 @@ This project was originally made by nolanwhy.
    RCCService.exe -console -start -verbose -placeid:1818
    ```
 
+> **Note:** Never expose RCCService to the internet.
+
 If everything is set up correctly, RCCService will start and display verbose output in the console.
 
 
