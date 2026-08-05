@@ -1,4 +1,22 @@
-# RCCServiceSoap08
+# RCCSoap08 (RCCServiceSoap08-improved)
 
-use RCCService 0.3.783.0 build from May 14, 2008 for this:
-https://archive.org/download/rbxgssetup/RBXGSSetup_0.3.783.0.msi
+This project uses **RCCService 0.3.783.0** (build from **May 14, 2008**).
+
+## Installation
+
+1. Download and install RCCService:
+   https://archive.org/download/rbxgssetup/RBXGSSetup_0.3.783.0.msi
+
+2. Open Command Prompt and navigate to the installation folder:
+
+   ```cmd
+   cd "C:\Program Files (x86)\ROBLOX Corporation\RCCService"
+   ```
+
+3. Start RCCService:
+
+   ```cmd
+   RCCService.exe -console -start -verbose -placeid:1818
+   ```
+
+If everything is set up correctly, RCCService will start and display verbose output in the console.
