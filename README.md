@@ -29,7 +29,7 @@ If everything is set up correctly, RCCService will start and display verbose out
 Include the library:
 
 ```php
-require_once("path/to/RCCServiceSoap08.php");
+require_once("path/to/RCCSoap08/main.php");
 ```
 
 Create an RCCSoap08 instance:
