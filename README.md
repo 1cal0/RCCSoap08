@@ -2,6 +2,8 @@
 
 This project uses **RCCService 0.3.783.0** (build from **May 14, 2008**).
 
+Originally made by nolanwhy.
+
 ## Installation
 
 1. Download and install RCCService:
