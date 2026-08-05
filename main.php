@@ -1,11 +1,7 @@
 <?php
 
-// this defines the rccservicesoap class yeah so uhm use it if you want to :)
-// not needing any other file, only the class then you are ready to go
-// originally made by nolanwhy
-
 /*
-    -------------------- Update 3 - 05/06/2026 ---------------------
+    - 05/06/2026
 	# minor fixes
     # proper sanitization
     # improved guide on how to use rccsoap08
@@ -14,28 +10,6 @@
     -------------------------------------------------------------
 */
 
-// HOW TO USE
-/*
-require_once("your/path/here/RCCServiceSoap08.php");
-
-$RCCServiceSoap = new RCCServiceSoap08("127.0.0.1", 64989, "roblox.com", true);
-// PARAMETERS:
-// "127.0.0.1")"  			= rcc ip
-// 64989                  	= rcc port
-// "roblox.com"				= patched site domain
-// true                     = fix renders
-
-$result = $RCCServiceSoap->execScript('print("Hello World")', "job1", 5);
-echo $result;
-// PARAMETERS:
-// "print('Hello World')     = Lua script to execute
-// "job1"                    = job id (must be unique per request)
-// 1                         = job expiration time (seconds)
-
-
-// QUICK TEST FUNCTION
-echo $RCCServiceSoap->helloWorld();
-*/
 
 class RCCServiceSoap08
 {
@@ -51,7 +25,7 @@ class RCCServiceSoap08
 		}
 
         if (!is_int($port) || $port < 1) {
-            throw new InvalidArgumentException("invalid RCC port");
+            throw new InvalidArgumentException("invalid port");
         }
 
         if (!filter_var('http://' . $url, FILTER_VALIDATE_URL)) {
@@ -69,7 +43,7 @@ class RCCServiceSoap08
         $curlHandle = curl_init($url);
 
         curl_setopt($curlHandle, CURLOPT_HTTPHEADER, ["Content-Type: text/xml"]);
-		// rccservice accepts only post requests
+		// rccservice accepts only POST requests
         curl_setopt($curlHandle, CURLOPT_POST, true);
         curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $xml);
 		
