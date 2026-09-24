@@ -37,7 +37,7 @@ require_once("path/to/RCCSoap08/main.php");
 Create an RCCSoap08 instance:
 
 ```php
-$RCCServiceSoap = new RCCServiceSoap08(
+$RCCServiceSoap = new RCCSoap08(
     "127.0.0.1",   // RCCService IP
     64989,         // RCCService port
     "roblox.com",  // Patched site domain
@@ -48,7 +48,7 @@ $RCCServiceSoap = new RCCServiceSoap08(
 ## Execute a Lua Script
 
 ```php
-$result = $RCCServiceSoap->execScript(
+$result = $RCCSoap08->execScript(
     'print("Hello World")',
     "job1", // Unique job ID
     5       // Job expiration (seconds)
