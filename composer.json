@@ -1,0 +1,20 @@
+{
+    "name": "1cal0/rccsoap08",
+    "description": "Made for communicating with Roblox Cloud Computing Service via XML SOAP using PHP",
+    "type": "library",
+    "keywords": ["roblox", "rccservice", "soap", "rcc"],
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=8.1",
+        "ext-curl": "*"
+    },
+    "autoload": {
+        "classmap": ["main/index.php"]
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.0"
+    },
+    "scripts": {
+        "analyse": "phpstan analyse main --level=5"
+    }
+}
