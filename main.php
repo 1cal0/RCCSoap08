@@ -37,15 +37,15 @@ class RCCSoap08
         public readonly bool $renderFix = true
     ) {
         if (!filter_var($this->ip, FILTER_VALIDATE_IP)) {
-            throw new InvalidArgumentException("invalid IP");
+            throw new InvalidArgumentException("Invalid IP Address");
         }
 
         if ($this->port < 1 || $this->port > 65535) {
-            throw new InvalidArgumentException("invalid port");
+            throw new InvalidArgumentException("Invalid port number");
         }
 
         if (!filter_var('http://' . $this->url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException("invalid URL");
+            throw new InvalidArgumentException("Invalid URL");
         }
     }
 
@@ -156,7 +156,7 @@ class RCCSoap08
      *         status, or a SOAP fault (see requestUrl()).
      */
     public function execScript(
-        string $script = 'print("Hello World!")',
+        string $script = 'print("Hello, World!")',
         string $jobId = "HelloWorld",
         float $jobExpiration = 0.1
     ): string {
@@ -199,8 +199,8 @@ class RCCSoap08
     public function helloWorld(): string
     {
         return $this->execScript(
-            'print("Hello World!")',
-            "helloworld",
+            'print("Hello, World!")',
+            "HelloWorld",
             0.1
         );
     }
